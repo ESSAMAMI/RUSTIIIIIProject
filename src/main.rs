@@ -6,6 +6,8 @@ fn main() {
 
     let path = "D:/cours/4_IABD/RUST/Projet_Rust/src/images/picture_P3.ppm";
 
-    images::Image::new_with_file(path)
-    
+    // Test Image
+    #[allow(dead_code)]
+    let mut get_image = images::Image::new_with_file(path);
+    // println!("{:}", get_image.);    
 }
