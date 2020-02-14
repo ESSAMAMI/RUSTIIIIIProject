@@ -139,6 +139,13 @@ mod tests {
 
     }
 
+    #[test]
+    fn max_pixel() {
+        let image = Image::new_with_file("D:/cours/4_IABD/RUST/Projet_Rust/src/images/picture_P3.ppm");
+        assert_eq!(image.high_pixel, 255)
+
+    }
+
     #[bench]
     fn bench_new_with_file(b: &mut Bencher) {
         b.iter(|| Image::new_with_file("D:/cours/4_IABD/RUST/Projet_Rust/src/images/picture_P3.ppm"))
