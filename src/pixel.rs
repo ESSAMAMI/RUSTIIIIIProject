@@ -1,4 +1,6 @@
-#[derive(Clone, Debug, Copy)]
+// https://doc.rust-lang.org/rust-by-example/trait/clone.html
+#[derive(Debug, Clone, Copy)]
+
 pub struct Pixel{
     red: u8,
     green: u8,
@@ -31,11 +33,15 @@ impl Pixel{
         return self.blue
     }
 
-    // ToString :p
+    
     #[allow(dead_code)]
     pub fn display(&self)-> String{
-
         return format!("Red => {}, Green => {}, Blue => {}", self.red, self.green, self.blue)
+    }
+
+    // ToString : Nedeed to write pixel as string to save...
+    pub fn to_string(&self)-> String{
+        return format!("{} {} {}", self.red, self.green, self.blue)
     }
 
     #[allow(dead_code)]
@@ -52,7 +58,6 @@ impl Pixel{
         ((self.red as f64 + self.green as f64 + self.blue as f64) / 3.0) as u8
     }
 
-    
 }
 // Source => https://doc.rust-lang.org/std/cmp/trait.Eq.html
 #[allow(dead_code)]
