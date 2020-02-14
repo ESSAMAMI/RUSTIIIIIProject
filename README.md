@@ -1,7 +1,4 @@
-## Project RUST NOT A PIP BUT "RIP" :pushpin:
-
-
-## Subject Pip READER IMAGE
+# Subject Pip READER IMAGE
 
 Goals: Manipulating IO, Memory, Concurrent programming with threads and exposing Rust function through Foreign Function Interface.
 
