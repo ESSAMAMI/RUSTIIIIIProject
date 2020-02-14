@@ -1,18 +1,14 @@
-use std::fmt::{Display, Formatter, Error};
+#![feature(test)]
 use std::path::Path;
 use std::fs::File;
 use std::io::BufReader;
 use std::io::BufRead;
-use std::str::FromStr;
 use std::iter::Iterator;
-use std::io::Read;
-use std::io::Write;
-use std::env;
-use std::fs;
-use std::path::PathBuf;
+use std::io::prelude::*;
 
 use crate::pixel::Pixel;
-
+#[repr(C, packed)]
+#[derive(Debug, Clone)]
 pub struct Image {
 
     image_type: String,
@@ -30,7 +26,6 @@ impl Image {
         let file: BufReader<File> = BufReader::new(File::open(path).unwrap());
         let mut file_lines = file.lines();
         let format = file_lines.next().unwrap().unwrap().to_string();
-        // let width_heigth: Vec<String> = file_lines.next().unwrap().unwrap().split(' ').collect();
         let width_height: Vec<String> = file_lines.next().unwrap().unwrap().split(' ').map(|s| s.to_string()).collect();
         let width = width_height[0].parse::<usize>().unwrap();
         let height = width_height[1].parse::<usize>().unwrap();
@@ -67,11 +62,6 @@ impl Image {
             i+= 1;
         }
 
-        println!("=>Format {:?}", format);
-        println!("=>Width {:?}", width);
-        println!("=>Height {:?}", height);
-        println!("=>MaxPixel {:?}", max_pixel);
-
         Image{
             image_type: format,
             height: height,
@@ -91,11 +81,67 @@ impl Image {
 
     #[allow(dead_code)]
     pub fn grayscale(&mut self) {
-        for pixel in self.vect_pixels.iter_mut() {
+        for pixel in unsafe{self.vect_pixels.iter_mut()} {
             pixel.grayscale();
         }
     }
 
+    #[allow(dead_code)]
+    pub fn save(&self, filename: &Path){
+        let header = unsafe{format!("{}\n{} {}\n{}\n", self.image_type, self.width, self.height, self.high_pixel)};
+        
+        let mut new_file = match File::create(filename) {
+            Err(why) => panic!("Unable to write file..."),
+            Ok(new_file) => new_file,
+        };
+
+        new_file.write_all(header.as_bytes()).expect("Unable to write header");
+        let mut line = 1;
+        for pixel in &self.vect_pixels{        
+            if line % 5 == 0{
+                line = 1;
+                new_file.write_all("\n".as_bytes());
+            }
+            line += 1;
+            new_file.write_all(pixel.to_string().as_bytes()).expect("Unable to write line...");
+            new_file.write_all(" ".as_bytes())
+            .expect("Unable to write pixels...");
+        }
+        
+
+    
+    }
+
+}
+
+#[cfg(test)]
+
+mod tests {
+    use super::*;
+    use test::Bencher;
 
 
+    #[test]
+    fn image_header() {
+        let image = Image::new_with_file("D:/cours/4_IABD/RUST/Projet_Rust/src/images/picture_P3.ppm");
+        assert_eq!(image.image_type, "P3")
+
+    }
+
+    fn image_width() {
+        let image = Image::new_with_file("D:/cours/4_IABD/RUST/Projet_Rust/src/images/picture_P3.ppm");
+        assert_eq!(image.width, 34)
+    }
+    
+    fn image_height() {
+        let image = Image::new_with_file("D:/cours/4_IABD/RUST/Projet_Rust/src/images/picture_P3.ppm");
+        assert_eq!(image.height, 7)
+
+    }
+
+    #[bench]
+    fn bench_add_two(b: &mut Bencher) {
+        b.iter(|| Image::new_with_file("D:/cours/4_IABD/RUST/Projet_Rust/src/images/picture_P3.ppm"))
+    }
+    
 }
