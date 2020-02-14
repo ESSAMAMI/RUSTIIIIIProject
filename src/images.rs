@@ -1,3 +1,4 @@
+#![feature(test)]
 use std::path::Path;
 use std::fs::File;
 use std::io::BufReader;
@@ -111,6 +112,36 @@ impl Image {
     
     }
 
+}
+
+#[cfg(test)]
+
+mod tests {
+    use super::*;
+    use test::Bencher;
 
 
+    #[test]
+    fn image_header() {
+        let image = Image::new_with_file("D:/cours/4_IABD/RUST/Projet_Rust/src/images/picture_P3.ppm");
+        assert_eq!(image.image_type, "P3")
+
+    }
+
+    fn image_width() {
+        let image = Image::new_with_file("D:/cours/4_IABD/RUST/Projet_Rust/src/images/picture_P3.ppm");
+        assert_eq!(image.width, 34)
+    }
+    
+    fn image_height() {
+        let image = Image::new_with_file("D:/cours/4_IABD/RUST/Projet_Rust/src/images/picture_P3.ppm");
+        assert_eq!(image.height, 7)
+
+    }
+
+    #[bench]
+    fn bench_add_two(b: &mut Bencher) {
+        b.iter(|| Image::new_with_file("D:/cours/4_IABD/RUST/Projet_Rust/src/images/picture_P3.ppm"))
+    }
+    
 }

@@ -1,3 +1,7 @@
+#![feature(test)]
+
+extern crate test;
+
 // =========== MOD ============
 mod pixel;
 pub mod images;
@@ -7,8 +11,7 @@ use images::Image;
 use std::path::Path;
 
 fn main() {
-    // println!("Hello, world!");
-
+    
     let path = "D:/cours/4_IABD/RUST/Projet_Rust/src/images/picture_P3.ppm";
 
     // Test Image
@@ -18,10 +21,14 @@ fn main() {
     println!("=>Image Before {:?}", image);
 
     image.invert();
-
     println!("=>Image After Invert {:?}", image);
 
-    let save_image = Path::new("D:/cours/4_IABD/RUST/Projet_Rust/src/images/picture_P3_inverted.ppm");
-    image.save(save_image);
-    
+    let save_image_invert = Path::new("D:/cours/4_IABD/RUST/Projet_Rust/src/images/picture_P3_inverted.ppm");
+    image.save(save_image_invert);
+
+    image.grayscale();
+    println!("=>Image After GrayScale {:?}", image);
+    let save_image_grayscale = Path::new("D:/cours/4_IABD/RUST/Projet_Rust/src/images/picture_P3_gray_scale.ppm");
+    image.save(save_image_grayscale);
+
 }
